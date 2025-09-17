@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Reservar Veículo{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Reservar: {{ vehicle.brand }} {{ vehicle.model }}</h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      {% if vehicle.image_url %}
+        <img src="{{ vehicle.image_url }}" alt="Imagem do veículo" class="img-fluid rounded">
+      {% endif %}
+      <p class="mt-2"><strong>Valor da diária:</strong> € {{ vehicle.daily_rate }}</p>
+      <p><strong>Tipo:</strong> {{ vehicle.vehicle_type }} | <strong>Transmissão:</strong> {{ vehicle.transmission }}</p>
+      <p><strong>Capacidade:</strong> {{ vehicle.people_capacity }} pessoas</p>
+    </div>
+
+    <div class="col-md-6">
+      <form method="POST">
+        <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+
+        <div class="mb-3">
+          <label class="form-label">Data de Início</label>
+          <input type="date" name="start_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Data de Fim</label>
+          <input type="date" name="end_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Forma de Pagamento</label>
+          <select name="payment" class="form-select" required>
+            <option value="">Selecionar...</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Multibanco">Multibanco</option>
+          </select>
+        </div>
+
+        <button class="btn btn-success">Confirmar Reserva</button>
+        <a href="/search" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

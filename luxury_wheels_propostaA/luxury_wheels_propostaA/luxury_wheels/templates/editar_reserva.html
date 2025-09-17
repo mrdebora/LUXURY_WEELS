@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Editar Reserva</h2>
+  <form method="POST">
+  <label for="start_date">Data de Início:</label>
+  <input type="date" name="start_date" value="{{ reserva.start_date }}" required><br><br>
+
+  <label for="end_date">Data de Fim:</label>
+  <input type="date" name="end_date" value="{{ reserva.end_date }}" required><br><br>
+
+  <button type="submit" class="btn btn-primary">Atualizar</button>
+  </form>
+
+{% endblock %}

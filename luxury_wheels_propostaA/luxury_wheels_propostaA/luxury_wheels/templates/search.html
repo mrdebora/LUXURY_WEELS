@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Pesquisar Veículos{% endblock %}
+{% block content %}
+
+<h2 class="mb-4">Pesquisar Veículos</h2>
+
+<form method="GET" action="/search" class="row g-3 mb-4">
+  <div class="col-md-3">
+    <label class="form-label">Marca</label>
+    <input name="brand" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Categoria</label>
+    <input name="category" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Tipo</label>
+    <select name="vehicle_type" class="form-select">
+      <option value="">Todos</option>
+      <option value="Carro">Carro</option>
+      <option value="Moto">Moto</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Valor máximo (€)</label>
+    <input name="max_price" type="number" step="0.01" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Data início</label>
+    <input name="start_date" type="date" class="form-control">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Data fim</label>
+    <input name="end_date" type="date" class="form-control">
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
+  </div>
+</form>
+
+<h3>Resultados:</h3>
+<div class="row">
+  {% for vehicle in vehicles %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow">
+        {% if vehicle.image_url %}
+          <img src="{{ vehicle.image_url }}" class="card-img-top" alt="Imagem do veículo">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
+          <p class="card-text">
+            Tipo: {{ vehicle.vehicle_type }}<br>
+            Transmissão: {{ vehicle.transmission }}<br>
+            Pessoas: {{ vehicle.people_capacity }}<br>
+            Valor: {{ "%.2f"|format(vehicle.daily_rate)|replace(".", ",") }} €/dia
+          </p>
+          <a href="/reserve?vehicle_id={{ vehicle.id }}" class="btn btn-success">Reservar</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

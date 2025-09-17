@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Minhas Reservas{% endblock %}
+{% block content %}
+<h2>Minhas Reservas</h2>
+
+{% if reservations %}
+  <div class="alert alert-primary">
+    <strong>Resumo:</strong><br>
+    Total de reservas: {{ total_reservas }}<br>
+    Valor total gasto: € {{ "%.2f"|format(total_gasto) }}<br>
+    Última reserva em: {{ ultima_data or "N/A" }}
+  </div>
+
+  <a href="{{ url_for('export_reservations') }}" class="btn btn-success mb-3">📤 Exportar CSV</a>
+
+  <ul class="list-group">
+  {% for r in reservations %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ vehicles[r.vehicle_id].brand }} {{ vehicles[r.vehicle_id].model }}</strong><br>
+        De {{ r.start_date }} até {{ r.end_date }} — <strong>{{ "%.2f"|format(r.total_price) }} €</strong>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="{{ url_for('editar_reserva', reserva_id=r.id) }}" class="btn btn-sm btn-primary">Editar</a>
+        <form method="POST" action="/cancel_reservation/{{ r.id }}">
+          <button class="btn btn-sm btn-danger">Cancelar</button>
+        </form>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>Você ainda não tem reservas.</p>
+{% endif %}
+{% endblock %}
