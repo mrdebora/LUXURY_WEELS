@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Editar Veículo</h2>
+  <form method="POST">
+    <label for="brand">Marca:</label><br>
+    <input type="text" name="brand" value="{{ vehicle.brand }}" required><br><br>
+
+    <label for="model">Modelo:</label><br>
+    <input type="text" name="model" value="{{ vehicle.model }}" required><br><br>
+
+    <label for="category">Categoria:</label><br>
+    <input type="text" name="category" value="{{ vehicle.category }}"><br><br>
+
+    <label for="vehicle_type">Tipo de Veículo:</label><br>
+    <select name="vehicle_type" required>
+      <option value="Carro" {% if vehicle.vehicle_type == 'Carro' %}selected{% endif %}>Carro</option>
+      <option value="Moto" {% if vehicle.vehicle_type == 'Moto' %}selected{% endif %}>Moto</option>
+    </select><br><br>
+
+    <label for="transmission">Transmissão:</label><br>
+    <input type="text" name="transmission" value="{{ vehicle.transmission }}"><br><br>
+
+    <label for="people_capacity">Capacidade de Pessoas:</label><br>
+    <input type="number" name="people_capacity" min="1" value="{{ vehicle.people_capacity }}"><br><br>
+
+    <label for="daily_rate">Preço Diário (€):</label><br>
+    <input type="number" step="0.01" name="daily_rate" value="{{ vehicle.daily_rate }}" required><br><br>
+
+    <label for="image_url">Link da Foto:</label><br>
+    <input type="url" name="image_url" value="{{ vehicle.image_url }}" placeholder="https://exemplo.com/foto.jpg"><br><br>
+
+    <label for="last_revision">Última Revisão:</label><br>
+    <input type="text" name="last_revision" value="{{ vehicle.last_revision }}"><br><br>
+
+    <label for="next_revision">Próxima Revisão:</label><br>
+    <input type="text" name="next_revision" value="{{ vehicle.next_revision }}"><br><br>
+
+    <label for="last_inspection">Última Inspeção:</label><br>
+    <input type="text" name="last_inspection" value="{{ vehicle.last_inspection }}"><br><br>
+
+    <button type="submit" class="btn btn-primary">Atualizar Veículo</button>
+  </form>
+{% endblock %}

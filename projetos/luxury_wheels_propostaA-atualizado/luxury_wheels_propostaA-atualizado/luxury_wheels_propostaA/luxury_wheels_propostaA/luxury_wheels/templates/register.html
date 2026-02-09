@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Registrar{% endblock %}
+{% block content %}
+<h2>Criar Conta</h2>
+<form method="POST" class="mt-4" style="max-width: 400px;">
+  <div class="mb-3">
+    <label class="form-label">Usuário</label>
+    <input name="username" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Senha</label>
+    <input name="password" type="password" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-success">Registrar</button>
+  <a href="/login" class="btn btn-link">Já tem conta?</a>
+</form>
+{% endblock %}

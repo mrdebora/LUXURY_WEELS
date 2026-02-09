@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.virtualenv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+
+# Large data files (exceeds GitHub limit)
+dados/05_05_imdb_elenco.csv
+
+# Excel/CSV temporary files
+~$*.xlsx
+~$*.xls
+.~lock.*
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Installation files
+*.exe
+*.msi
+*.dmg
+*.pkg
+*.zip
+*.tar.gz
+*.rar
+
+# Environment variables
+.env
+.env.local
+
+# Flask
+instance/
+.webassets-cache
+flask_session/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

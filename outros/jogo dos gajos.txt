@@ -1,0 +1,333 @@
+def fase1():
+    print("bem vindo ao jogo aventure com os gajos")
+    print("iniciando...")
+    personagem = str(input("escolha seu personagem \n davi \n wellison \n debora \n >>"))
+    if personagem == "a" or personagem == "davi":
+        print("guerreiro davi escolhido com sucesso".format(personagem.upper()))
+        print(50 * "_")
+    elif personagem == "b" or personagem == "wellison":
+        print("guerreiro wellison escolhido com sucesso".format(personagem.upper()))
+        print(50 * "_")
+    elif personagem == "c" or personagem == "debora":
+        print("guerreiro debora escolhido com sucesso".format(personagem.upper()))
+        print(50 * "_")
+    else:
+        print("esse personagem não existe!")
+        print(50 * "_")
+    roupa = str(input("escolha sua roupa \n a)armadura de fogo \n b)vestido \n c)kimono \n >>"))
+    if roupa == "a" or roupa == "armadura de fogo":
+        print(personagem + " vestiu a sua armadura de fogo para batalha")
+        print(50 * "_")
+    elif roupa == "b" or roupa == "vestido":
+        print(personagem + " vestiu seu vestido para batalha")
+        print(50 * "_")
+    elif roupa == "c" or roupa == "kimono":
+        print(personagem + " vestiu seu kimono para batalha")
+        print(50 * "_")
+    else:
+        print("roupa indisponivel!")
+        print(50 * "_")
+    locomocao = str(input("escolha a sua locomoção \n a)cavalo \n b)aguia \n c)dragão \n >>"))
+    if locomocao == "a" or locomocao == "cavalo":
+        print("você montou no seu cavalo")
+        print(50 * "_")
+    elif locomocao == "b" or locomocao == "aguia":
+        print("você montou na sua aguia")
+        print(50 * "_")
+    elif locomocao == "c" or locomocao == "dragão":
+        print("você montou no seu dragão")
+        print(50 * "_")
+    else:
+        print("locomoção indisponivel!")
+
+
+def fase2():
+    avanc = True
+
+    while avanc:
+
+        avanco = str(input("por onde deseja avançar?\na)lago de fogo\nb)rua deserta\nc)floresta assustadora\n>>"))
+        if avanco == "b" or avanco == "rua deserta":
+            print("você avançou pela rua deserta...\n você foi capturado por assaltantes +_+ \ntente novamente")
+            print(50 * "_")
+            avanc = False
+            fase2()
+        elif avanco == "c" or avanco == "floresta assustadora":
+
+            print("você avançou pela floresta assustadora...\no dementador te pegou +_+ \ntente novamente")
+            print(50 * "_")
+            avanc = False
+            fase2()
+        elif avanco == "a" or avanco == "lago de fogo":
+            print("você avançou pelo lago de fogo...\n a fênix está a sua espera para lhe guiar!")
+            print(50 * "_")
+            fase3()
+            avanc = True
+        else:
+            print("opcao invalida")
+
+
+def fase3():
+    dormir = True
+
+    while dormir:
+        print(50 * "_")
+
+        contoudor = str(input("você está cansado deseja... \na)dormir \nb)continuar e procurar o mapa \n>>"))
+
+        if contoudor == "a" or contoudor == "dormir":
+            print("dormindo...\nvocê acordou")
+            dormir = True
+            acorda()
+        elif contoudor == "b" or contoudor == "procurar mapa":
+            print("boa mesmo cansado vamos avançar...")
+            dormir = False
+            fase4()
+        else:
+            print("opcao invalida")
+
+
+def acorda():
+    dormir = True
+
+    while dormir:
+        print(50 * "_")
+        contoudor = str(input("deseja! \na)dormir mais \nb)procurar o mapa \n>>"))
+
+        if contoudor == "a" or contoudor == "dormir":
+            print("dormindo...\nvocê acordou")
+            print(50 * "_")
+            dormir = True
+            acorda()
+        elif contoudor == "b" or contoudor == "procurar mapa":
+            print("vamos avançar...")
+            print(50 * "_")
+            dormir = False
+            fase4()
+
+
+def fase4():
+    achou = True
+
+    while achou:
+        print(50 * "_")
+
+        procurar = str(
+            input("por onde deseja procurar o mapa?\na)tumba da mumia\nb)castelo de bridgthon\nc)bar antigo\n>>"))
+
+        if procurar == "a" or procurar == "tumba da mumia":
+            print("você capturado por mumia +_+\ntente novamente")
+            print(50 * "_")
+            achou = False
+            fase4()
+        elif procurar == "b" or procurar == "castelo de bridgthon":
+            print("você foi morto por entrar sem permissão +_+\ntente novamente")
+            print(50 * "_")
+            achou = False
+            fase4()
+        elif procurar == "c" or procurar == "bar antigo":
+            print("você achou o mapa")
+            print("abrindo o mapa...")
+            print(
+                "mapa:antes de você ir em busca da pedra filosofal você precisa da espada de\n"
+                " escalibul que esta na cidade de têmis")
+            print("mapa guardado.")
+            print(50 * "_")
+            achou = True
+            fase5()
+
+
+def fase5():
+    temis = True
+
+    while temis:
+
+        opcao = str(input("você deseja... \na)continuar sem a espada \nb)ir atê a cidade de têmis\n>> "))
+        if opcao == "a" or opcao == "continuar sem a espada" or opcao == "continuar":
+            print("continuando...")
+            print(50 * "_")
+            temis = False
+            fase7a()
+        elif opcao == "b" or opcao == "ir atê a cidade de têmis" or opcao == "ir ate temis":
+            print("viajando atê têmis...")
+            print(50 * "_")
+            temis = True
+            fase6()
+        else:
+            print("essa opcão não existe")
+            print(50 * "_")
+
+
+def fase6():
+    saladaespada = True
+
+    while saladaespada:
+        print(50 * "_")
+
+        cont = str(input("ohh!você se deparou com 3 zumbiso 0_0\na)matar os zumbis com sua faca "
+                         "\nb)matar os zumbis com flechas\nc)matar com arcos\n>>"))
+        if cont == "a" or cont == "matar os zumbis com sua faca" or cont == "matar com a faca":
+            print("os zumbis foram mais rapidos você morreu...\n tente novamente")
+            print(50 * "_")
+            saladaespada = False
+            fase6()
+        elif cont == "b" or cont == "matar com flechas" or cont == "com flexas" or cont == "flexas":
+            print("você conseguiu ,eliminou os 3 zumbis\navaçando...")
+            print("voçê chegou na sala da espada")
+            print("uau sua amiga tesla tem algo a dize")
+            print(
+                "parabens você chegou até aqui seus pais sempre duvidaram"
+                "\nde você e olha onde você esta hoje visto como um melhor espada xin ja visto")
+            print("pegando a espada de escalibul...")
+            print(50 * "_")
+            saladaespada = True
+            fase7()
+        elif cont == "c" or cont == "matar com arcos" or cont == "com arcos" or "arcos":
+            print("os arcos não foram o suficiente... você morreu\ntente novamente")
+            print(50 * "_")
+            saladaespada = False
+            fase6()
+
+
+def fase7():
+    cidade = True
+
+    while cidade:
+        print(50 * "_")
+
+        cidade = str(input("escolha por onde continuar sua jornada\na)peak \nb)bimasakt \nc)caminho das onças\n>>"))
+        if cidade == "a" or cidade == "peak":
+            print("sua fênix está a sua espera")
+            print("montando na fênix...")
+            print("voando...")
+            print(50 * "_")
+            cidade = True
+            fase8()
+        elif cidade == "b" or cidade == "bimasakt":
+            print("explodido por uma mina terrestre,morto...\ntente novamente")
+            print(50 * "_")
+            cidade = False
+            fase7()
+        elif cidade == "c" or cidade == "caminho das onças":
+            print("foi capturado por indigenas...morto\ntente novamente")
+            print(50 * "_")
+            cidade = False
+            fase8()
+        else:
+            print("opção não existe")
+            print(50 * "_")
+
+
+def fase7a():
+    cidade = True
+
+    while cidade:
+        print(50 * "_")
+        cidade = str(input("escolha por onde continuar sua jornada\na)peak \nb)bimasakt \nc)caminho das onças\n>>"))
+        if cidade == "a" or cidade == "peak":
+            print("sua fênix está a sua espera")
+            print("montando na fênix...")
+            print("voando...")
+            print(50 * "_")
+            cidade = True
+            fase8a()
+        elif cidade == "b" or cidade == "bimasakt":
+            print("explodido por uma mina terrestre,morto...\ntente novamente")
+            print(50 * "_")
+            cidade = False
+            fase7a()
+        elif cidade == "c" or cidade == "caminho das onças":
+            print("foi capturado por indigenas...morto\ntente novamente")
+            print(50 * "_")
+            cidade = False
+            fase7a()
+        else:
+            print("opção não existe")
+            print(50 * "_")
+
+
+def fase8():
+    pedra = True
+
+    while pedra:
+        print(50 * "_")
+        print("você chegou na cidade purgatorio onde a pedra filosofal se encontra")
+        op = str(input("ohh! o tão temido monstro METATRON \n CUIDADO QUERREIRO ESSA PODE SER UMA ESCOLHA FATAL!"
+                       "\na)chamar ajuda\nb)matar com flechas\nc)usar sua espada escalibul\nd)fugir\ne)usar sua porção "
+                       "e "
+                       "volta no tempo para busca a espada escalibul\n>>"))
+        if op == "a" or op == "chamar ajuda":
+            print("você achou mesmo que teria tempo...morto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8()
+        elif op == "b" or op == "matar com flechas":
+            print("as flechas só deixou ele mais furioso...ele te pegou\n morto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8()
+        elif op == "c" or op == "usar a espada escalibul" or op == "espada escalibul":
+            print("Você conseguiu !!\n a espada era a unica que poderia mata-lo à seculas "
+                  "tentavam mata-lo e você foi o unico que conseguiu deter")
+            print("PARABENS GUERREIRO(A)!")
+            print("pegando a pedra filosofal...")
+            print("essa pedra à segrados que só GUERREIROS sabem...")
+            print("fim...")
+            print(50 * "_")
+            pedra = True
+
+        elif op == "d" or op == "fugir":
+            print("achou mesmo que poderia fugir do MAIS TEMIDO METATRON\nmorto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8()
+
+
+def fase8a():
+    pedra = True
+
+    while pedra:
+        print(50 * "_")
+        print("você chegou na cidade purgatorio onde a pedra filosofal se encontra")
+        op = str(input("ohh! o tão temido monstro METATRON \n CUIDADO QUERREIRO ESSA PODE SER UMA ESCOLHA FATAL!"
+                       "\na)chamar ajuda\nb)matar com flechas\nc)usar sua espada escalibul\nd)fugir\ne)usar sua porção "
+                       "e volta no tempo para busca a espada escalibul\n>>"))
+        if op == "a" or op == "chamar ajuda":
+            print("você achou mesmo que teria tempo...morto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8a()
+        elif op == "b" or op == "matar com flechas":
+            print("as flechas só deixou ele mais furioso...ele te pegou\n morto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8a()
+        elif op == "c" or op == "usar a espada escalibul" or op == "espada escalibul":
+            print(50 * "_")
+            print("OPA você não tem a espada de escalibul,você decidiu avançar sem ela na fase anterior")
+            print(50 * "_")
+            pedra = False
+            fase8a()
+        elif op == "d" or op == "fugir":
+            print("achou mesmo que poderia fugir do MAIS TEMIDO METATRON\nmorto\ntente novamente")
+            print(50 * "_")
+            pedra = False
+            fase8a()
+        elif op == "e" or op == "usar porção" or op == "voltar no tempo" or op == ("usar sua porção e volta no "
+                                                                                   "tempo para busca a espada "
+                                                                                   "escalibul"):
+            print("reflita sobre suas escolhas!\nantes que não tenha mais porções\nvoltando no tempo...")
+            print(50 * "_")
+            pedra = False
+            fase5()
+        else: 
+            print("opção invalida")
+
+fase1()
+fase2()
+fase3()
+fase4()
+fase5()
+fase6()
+fase7()
+fase8()
