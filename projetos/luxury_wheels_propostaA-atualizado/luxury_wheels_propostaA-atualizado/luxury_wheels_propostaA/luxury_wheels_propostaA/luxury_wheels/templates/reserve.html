@@ -1,47 +1,162 @@
 {% extends "base.html" %}
-{% block title %}Reservar Veículo{% endblock %}
+{% block title %}Reservar - {{ vehicle.brand }} {{ vehicle.model }}{% endblock %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4">Reservar: {{ vehicle.brand }} {{ vehicle.model }}</h2>
+
+<div class="container mt-4 fade-in">
+  <div class="text-center mb-4">
+    <h2>
+      <i class="bi bi-calendar-check-fill" style="color: var(--success-color);"></i>
+      Reservar Veículo
+    </h2>
+  </div>
 
   <div class="row">
-    <div class="col-md-6">
-      {% if vehicle.image_url %}
-        <img src="{{ vehicle.image_url }}" alt="Imagem do veículo" class="img-fluid rounded">
-      {% endif %}
-      <p class="mt-2"><strong>Valor da diária:</strong> € {{ vehicle.daily_rate }}</p>
-      <p><strong>Tipo:</strong> {{ vehicle.vehicle_type }} | <strong>Transmissão:</strong> {{ vehicle.transmission }}</p>
-      <p><strong>Capacidade:</strong> {{ vehicle.people_capacity }} pessoas</p>
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        {% if vehicle.image_url %}
+          <img src="{{ vehicle.image_url }}" alt="{{ vehicle.brand }} {{ vehicle.model }}" class="card-img-top" style="height: 300px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/600x300?text=Sem+Imagem'">
+        {% else %}
+          <img src="https://via.placeholder.com/600x300?text={{ vehicle.brand }}+{{ vehicle.model }}" class="card-img-top" alt="Placeholder">
+        {% endif %}
+        
+        <div class="card-body">
+          <h4 class="card-title">
+            <i class="bi bi-star-fill" style="color: var(--gold-color);"></i>
+            {{ vehicle.brand }} {{ vehicle.model }}
+          </h4>
+          
+          <div class="price-tag mt-3">
+            <div class="price-label">Diária a partir de</div>
+            <div>€ {{ "%.2f"|format(vehicle.daily_rate) }}</div>
+          </div>
+          
+          <ul class="vehicle-info mt-3">
+            <li>
+              <span><i class="bi bi-car-front"></i> <strong>Tipo</strong></span>
+              <span class="badge bg-secondary">{{ vehicle.vehicle_type }}</span>
+            </li>
+            <li>
+              <span><i class="bi bi-gear"></i> <strong>Transmissão</strong></span>
+              <span>{{ vehicle.transmission }}</span>
+            </li>
+            <li>
+              <span><i class="bi bi-people"></i> <strong>Capacidade</strong></span>
+              <span>{{ vehicle.people_capacity }} pessoas</span>
+            </li>
+            {% if vehicle.category %}
+            <li>
+              <span><i class="bi bi-tags"></i> <strong>Categoria</strong></span>
+              <span class="badge bg-info">{{ vehicle.category }}</span>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="col-md-6">
-      <form method="POST">
-        <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">
+            <i class="bi bi-clipboard-check"></i> Detalhes da Reserva
+          </h5>
+          
+          <form method="POST" id="reserveForm">
+            <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
 
-        <div class="mb-3">
-          <label class="form-label">Data de Início</label>
-          <input type="date" name="start_date" class="form-control" required>
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-calendar-event"></i> Data de Início
+              </label>
+              <input type="date" name="start_date" id="start_date" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                <i class="bi bi-calendar-check"></i> Data de Fim
+              </label>
+              <input type="date" name="end_date" id="end_date" class="form-control" required>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">
+                <i class="bi bi-credit-card"></i> Forma de Pagamento
+              </label>
+              <select name="payment" class="form-select" required>
+                <option value="">Selecionar...</option>
+                <option value="Cartão de Crédito">
+                  <i class="bi bi-credit-card"></i> Cartão de Crédito
+                </option>
+                <option value="PayPal">
+                  <i class="bi bi-paypal"></i> PayPal
+                </option>
+                <option value="Multibanco">
+                  <i class="bi bi-bank"></i> Multibanco
+                </option>
+              </select>
+            </div>
+
+            <div class="alert alert-info" id="priceCalculation" style="display: none;">
+              <h6><i class="bi bi-calculator"></i> Resumo do Valor:</h6>
+              <p class="mb-1"><strong>Dias:</strong> <span id="days">0</span></p>
+              <p class="mb-1"><strong>Valor da diária:</strong> € {{ "%.2f"|format(vehicle.daily_rate) }}</p>
+              <hr>
+              <h5><strong>Total:</strong> € <span id="totalPrice">0.00</span></h5>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i> Confirmar Reserva
+              </button>
+              <a href="/search" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar à Pesquisa
+              </a>
+            </div>
+          </form>
         </div>
-
-        <div class="mb-3">
-          <label class="form-label">Data de Fim</label>
-          <input type="date" name="end_date" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Forma de Pagamento</label>
-          <select name="payment" class="form-select" required>
-            <option value="">Selecionar...</option>
-            <option value="Cartão de Crédito">Cartão de Crédito</option>
-            <option value="PayPal">PayPal</option>
-            <option value="Multibanco">Multibanco</option>
-          </select>
-        </div>
-
-        <button class="btn btn-success">Confirmar Reserva</button>
-        <a href="/search" class="btn btn-secondary">Cancelar</a>
-      </form>
+      </div>
     </div>
   </div>
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const dailyRate = {{ vehicle.daily_rate }};
+  const startDateInput = document.getElementById('start_date');
+  const endDateInput = document.getElementById('end_date');
+  const priceCalc = document.getElementById('priceCalculation');
+  const daysSpan = document.getElementById('days');
+  const totalPriceSpan = document.getElementById('totalPrice');
+
+  function calculatePrice() {
+    const startDate = new Date(startDateInput.value);
+    const endDate = new Date(endDateInput.value);
+    
+    if (startDate && endDate && endDate >= startDate) {
+      const diffTime = Math.abs(endDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const total = diffDays * dailyRate;
+      
+      daysSpan.textContent = diffDays;
+      totalPriceSpan.textContent = total.toFixed(2);
+      priceCalc.style.display = 'block';
+    } else {
+      priceCalc.style.display = 'none';
+    }
+  }
+
+  startDateInput.addEventListener('change', calculatePrice);
+  endDateInput.addEventListener('change', calculatePrice);
+  
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  startDateInput.min = today;
+  endDateInput.min = today;
+  
+  startDateInput.addEventListener('change', function() {
+    endDateInput.min = this.value;
+  });
+</script>
 {% endblock %}

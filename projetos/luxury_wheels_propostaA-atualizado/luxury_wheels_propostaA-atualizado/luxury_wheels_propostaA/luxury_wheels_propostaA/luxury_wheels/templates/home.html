@@ -1,29 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Luxury Wheels{% endblock %}
+{% block title %}Luxury Wheels - Aluguel de Veículos de Luxo{% endblock %}
 {% block content %}
 
-<style>
-  body {
-    background-image: url("{{ url_for('static', filename='img/fundo.jpg') }}");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    color: white;
-    text-shadow: 1px 1px 2px black;
-  }
-</style>
-
-<div class="text-center mt-5">
-  <h1 class="display-3 fw-bold">Bem-vindo à Luxury Wheels</h1>
-  <p class="lead text-white fs-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.6);">
-  Sua plataforma de aluguel de veículos de luxo
-</p>
-
-
-  <div class="mt-4">
-    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-3">Entrar</a>
-    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Criar Conta</a>
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title glow-effect">
+      <i class="bi bi-car-front-fill float-animation"></i> Luxury Wheels
+    </h1>
+    <p class="hero-subtitle">
+      <i class="bi bi-star-fill"></i> Veículos de luxo ao seu alcance <i class="bi bi-star-fill"></i><br>
+      Conforto, elegância e performance em cada viagem
+    </p>
+    <div class="hero-buttons">
+      <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-3 ripple">
+        <i class="bi bi-box-arrow-in-right"></i> Entrar
+      </a>
+      <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg ripple">
+        <i class="bi bi-person-plus"></i> Criar Conta
+      </a>
+    </div>
   </div>
 </div>
 {% endblock %}

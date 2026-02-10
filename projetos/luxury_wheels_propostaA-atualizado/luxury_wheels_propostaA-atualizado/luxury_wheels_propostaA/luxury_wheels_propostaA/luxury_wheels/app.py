@@ -21,6 +21,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Por favor, faça login para acessar esta página.'
+login_manager.login_message_category = 'warning'
 
 # MODELOS
 class User(UserMixin, db.Model):
@@ -57,7 +59,7 @@ def editar_reserva(reserva_id):
     reserva = Reservation.query.get_or_404(reserva_id)
 
     if reserva.user_id != current_user.id:
-        flash("Não tem permissão para editar esta reserva.")
+        flash("Não tem permissão para editar esta reserva.", "danger")
         return redirect(url_for('my_reservations')) 
 
     if request.method == "POST":
@@ -65,14 +67,14 @@ def editar_reserva(reserva_id):
         nova_data_fim = request.form.get("end_date")
 
         if not nova_data_inicio or not nova_data_fim:
-            flash("Por favor, preencha todas as datas.")
+            flash("Por favor, preencha todas as datas.", "warning")
             return redirect(request.url)
 
         reserva.start_date = nova_data_inicio
         reserva.end_date = nova_data_fim
 
         db.session.commit()
-        flash("Reserva atualizada com sucesso!")
+        flash("Reserva atualizada com sucesso!", "success")
         return redirect(url_for("my_reservations")) 
 
     return render_template("editar_reserva.html", reserva=reserva)
@@ -96,23 +98,90 @@ def export_reservations():
     vehicle_map = {v.id: v for v in Vehicle.query.all()}
 
     si = StringIO()
-    cw = csv.writer(si)
-    cw.writerow(['Marca', 'Modelo', 'Data Início', 'Data Fim', 'Preço Total (€)'])
+    cw = csv.writer(si, delimiter=';', quoting=csv.QUOTE_MINIMAL)
+    
+    # Cabeçalho do relatório
+    cw.writerow(['LUXURY WHEELS - RELATÓRIO DE RESERVAS'])
+    cw.writerow([f'Usuário: {current_user.username}'])
+    cw.writerow([f'Data de Exportação: {datetime.now().strftime("%d/%m/%Y %H:%M")}'])
+    cw.writerow([])  # Linha vazia
+    
+    # Cabeçalho das colunas
+    cw.writerow([
+        'ID Reserva',
+        'Marca',
+        'Modelo',
+        'Categoria',
+        'Tipo',
+        'Transmissão',
+        'Data Início',
+        'Data Fim',
+        'Dias',
+        'Valor/Dia (€)',
+        'Método Pagamento',
+        'Valor Total (€)'
+    ])
+
+    total_reservas = 0
+    total_dias = 0
+    total_gasto = 0.0
 
     for r in reservations:
         vehicle = vehicle_map.get(r.vehicle_id)
         if vehicle:
+            # Calcular dias
+            try:
+                d1 = datetime.strptime(r.start_date, "%Y-%m-%d")
+                d2 = datetime.strptime(r.end_date, "%Y-%m-%d")
+                dias = (d2 - d1).days
+            except:
+                dias = 0
+            
+            # Formatar datas para padrão brasileiro
+            try:
+                data_inicio_fmt = datetime.strptime(r.start_date, "%Y-%m-%d").strftime("%d/%m/%Y")
+                data_fim_fmt = datetime.strptime(r.end_date, "%Y-%m-%d").strftime("%d/%m/%Y")
+            except:
+                data_inicio_fmt = r.start_date
+                data_fim_fmt = r.end_date
+            
             cw.writerow([
+                r.id,
                 vehicle.brand,
                 vehicle.model,
-                r.start_date,
-                r.end_date,
-                f"{r.total_price:.2f}"
+                vehicle.category or 'N/A',
+                vehicle.vehicle_type,
+                vehicle.transmission or 'N/A',
+                data_inicio_fmt,
+                data_fim_fmt,
+                dias,
+                f"{vehicle.daily_rate:.2f}".replace('.', ','),
+                r.payment_method or 'N/A',
+                f"{r.total_price:.2f}".replace('.', ',')
             ])
+            
+            total_reservas += 1
+            total_dias += dias
+            total_gasto += r.total_price
 
-    output = make_response(si.getvalue())
-    output.headers["Content-Disposition"] = "attachment; filename=reservas.csv"
-    output.headers["Content-type"] = "text/csv"
+    # Linha vazia antes do resumo
+    cw.writerow([])
+    
+    # Resumo final
+    cw.writerow(['RESUMO'])
+    cw.writerow(['Total de Reservas:', total_reservas])
+    cw.writerow(['Total de Dias:', total_dias])
+    cw.writerow(['Valor Total Gasto (€):', f"{total_gasto:.2f}".replace('.', ',')])
+    cw.writerow(['Valor Médio por Reserva (€):', f"{total_gasto/total_reservas:.2f}".replace('.', ',') if total_reservas > 0 else '0,00'])
+
+    # UTF-8 com BOM para compatibilidade com Excel
+    output_content = '\ufeff' + si.getvalue()
+    output = make_response(output_content)
+    
+    # Nome do arquivo com data e hora
+    filename = f"reservas_luxury_wheels_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    output.headers["Content-Disposition"] = f"attachment; filename={filename}"
+    output.headers["Content-type"] = "text/csv; charset=utf-8"
     return output
 
 
@@ -127,7 +196,7 @@ def login():
             login_user(user)
             return redirect(url_for('search'))
         else:
-            flash('Login inválido.')
+            flash('Login inválido. Verifique seu usuário e senha.', 'danger')
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -139,7 +208,7 @@ def register():
         # Verificar se o usuário já existe ANTES de criar
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash("Nome de usuário já existe.")
+            flash("Nome de usuário já existe. Escolha outro.", "warning")
             return redirect(url_for('register'))
         
         # Criar novo usuário apenas se não existir
@@ -148,7 +217,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         
-        flash("Conta criada com sucesso!")
+        flash("Conta criada com sucesso! Faça login para continuar.", "success")
         return redirect(url_for('login'))
     return render_template('register.html')
 
@@ -170,7 +239,7 @@ def add_reservation():
 
         vehicle = Vehicle.query.get(vehicle_id)
         if not vehicle:
-            flash("Veículo não encontrado.")
+            flash("Veículo não encontrado.", "danger")
             return redirect(url_for('add_reservation'))
 
         d1 = datetime.strptime(start_date, "%Y-%m-%d")
@@ -280,14 +349,14 @@ def reserve():
         if vehicle.next_revision:
             try:
                 if datetime.strptime(vehicle.next_revision, "%Y-%m-%d").date() < hoje:
-                    flash("Este veículo está com a revisão vencida. Reserva bloqueada.")
+                    flash("Este veículo está com a revisão vencida. Reserva bloqueada.", "warning")
                     return redirect(url_for('search'))
             except ValueError:
                 pass
         if vehicle.last_inspection:
             try:
                 if datetime.strptime(vehicle.last_inspection, "%Y-%m-%d").date() < hoje:
-                    flash("Este veículo está com a inspeção vencida. Reserva bloqueada.")
+                    flash("Este veículo está com a inspeção vencida. Reserva bloqueada.", "warning")
                     return redirect(url_for('search'))
             except ValueError:
                 pass
@@ -307,7 +376,7 @@ def reserve():
     ).all()
 
     if conflitos:
-        flash("Este veículo já está reservado nas datas selecionadas.")
+        flash("Este veículo já está reservado nas datas selecionadas. Escolha outras datas.", "warning")
         return redirect(url_for('search'))
 
     vehicle = Vehicle.query.get(vehicle_id)
@@ -327,8 +396,8 @@ def reserve():
 
     db.session.add(reservation)
     db.session.commit()
-    flash("Reserva realizada com sucesso.")
-    return redirect(url_for('search'))
+    flash("Reserva realizada com sucesso! Verifique em 'Minhas Reservas'.", "success")
+    return redirect(url_for('my_reservations'))
 
 
 
@@ -357,12 +426,12 @@ def my_reservations():
 def cancel_reservation(reservation_id):
     reservation = Reservation.query.get_or_404(reservation_id)
     if reservation.user_id != current_user.id:
-        flash("Não autorizado.")
+        flash("Não autorizado. Esta reserva não pertence a você.", "danger")
         return redirect(url_for('my_reservations'))
 
     db.session.delete(reservation)
     db.session.commit()
-    flash("Reserva cancelada com sucesso.")
+    flash("Reserva cancelada com sucesso.", "success")
     return redirect(url_for('my_reservations'))
 
 @app.route("/editar_veiculo/<int:vehicle_id>", methods=["GET", "POST"])
@@ -385,8 +454,8 @@ def editar_veiculo(vehicle_id):
         vehicle.last_inspection = request.form.get("last_inspection")
 
         db.session.commit()
-        flash("Veículo atualizado com sucesso!")
-        return redirect(url_for("my_reservations")) 
+        flash("Veículo atualizado com sucesso!", "success")
+        return redirect(url_for("search")) 
 
     return render_template("editar_veiculo.html", vehicle=vehicle)
 
