@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Luxury Wheels - Aluguel de Veículos de Luxo{% endblock %}
+{% block content %}
+
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title glow-effect">
+      <i class="bi bi-car-front-fill float-animation"></i> Luxury Wheels
+    </h1>
+    <p class="hero-subtitle">
+      <i class="bi bi-star-fill"></i> Veículos de luxo ao seu alcance <i class="bi bi-star-fill"></i><br>
+      Conforto, elegância e performance em cada viagem
+    </p>
+    <div class="hero-buttons">
+      <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-3 ripple">
+        <i class="bi bi-box-arrow-in-right"></i> Entrar
+      </a>
+      <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg ripple">
+        <i class="bi bi-person-plus"></i> Criar Conta
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

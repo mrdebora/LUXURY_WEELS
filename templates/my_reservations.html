@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Minhas Reservas - Luxury Wheels{% endblock %}
+{% block content %}
+
+<div class="fade-in">
+  <h2 class="mb-4">
+    <i class="bi bi-calendar-check-fill" style="color: var(--secondary-color);"></i>
+    Minhas Reservas
+  </h2>
+
+  {% if reservations %}
+    <div class="stats-card mb-4 zoom-in">
+      <h5 class="mb-3">
+        <i class="bi bi-graph-up"></i> Resumo das Reservas
+      </h5>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="stats-item">
+            <div class="stats-icon pulse-animation">
+              <i class="bi bi-bookmark-check"></i>
+            </div>
+            <div>
+              <div class="stats-value counter" data-target="{{ total_reservas }}">0</div>
+              <div>Total de Reservas</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stats-item">
+            <div class="stats-icon pulse-animation">
+              <i class="bi bi-cash-coin"></i>
+            </div>
+            <div>
+              <div class="stats-value">€ {{ "%.2f"|format(total_gasto) }}</div>
+              <div>Valor Total Gasto</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stats-item">
+            <div class="stats-icon">
+              <i class="bi bi-calendar-event"></i>
+            </div>
+            <div>
+              <div class="stats-value" style="font-size: 1.2rem;">{{ ultima_data or "N/A" }}</div>
+              <div>Última Reserva</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <a href="{{ url_for('export_reservations') }}" class="btn btn-success btn-lg">
+        <i class="bi bi-file-earmark-spreadsheet"></i> Exportar Relatório CSV
+      </a>
+      <small class="text-muted d-block mt-2">
+        <i class="bi bi-info-circle"></i> O arquivo incluirá todas as suas reservas com detalhes completos
+      </small>
+    </div>
+
+    <div class="row">
+      {% for r in reservations %}
+        <div class="col-md-6 mb-4 scroll-reveal">
+          <div class="card reservation-item">
+            {% if vehicles[r.vehicle_id].image_url %}
+              <img src="{{ vehicles[r.vehicle_id].image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ vehicles[r.vehicle_id].brand }}" onerror="this.src='https://via.placeholder.com/400x200?text=Sem+Imagem'">
+            {% endif %}
+            
+            <div class="card-body">
+              <h5 class="card-title">
+                <i class="bi bi-car-front-fill" style="color: var(--secondary-color);"></i>
+                {{ vehicles[r.vehicle_id].brand }} {{ vehicles[r.vehicle_id].model }}
+              </h5>
+              
+              <ul class="vehicle-info mb-3">
+                <li>
+                  <span><i class="bi bi-calendar-event"></i> <strong>Início</strong></span>
+                  <span>{{ r.start_date }}</span>
+                </li>
+                <li>
+                  <span><i class="bi bi-calendar-check"></i> <strong>Fim</strong></span>
+                  <span>{{ r.end_date }}</span>
+                </li>
+                {% if r.payment_method %}
+                <li>
+                  <span><i class="bi bi-credit-card"></i> <strong>Pagamento</strong></span>
+                  <span class="badge bg-info">{{ r.payment_method }}</span>
+                </li>
+                {% endif %}
+              </ul>
+              
+              <div class="price-tag" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
+                <div class="price-label">Valor Total</div>
+                <div>€ {{ "%.2f"|format(r.total_price) }}</div>
+              </div>
+              
+              <div class="d-flex gap-2 mt-3">
+                <a href="{{ url_for('editar_reserva', reserva_id=r.id) }}" class="btn btn-primary flex-fill">
+                  <i class="bi bi-pencil"></i> Editar
+                </a>
+                <form method="POST" action="/cancel_reservation/{{ r.id }}" class="flex-fill" onsubmit="return confirm('Tem certeza que deseja cancelar esta reserva?');">
+                  <button class="btn btn-danger w-100">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-calendar-x"></i>
+      <h4>Você ainda não tem reservas</h4>
+      <p>Explore nossos veículos e faça sua primeira reserva!</p>
+      <a href="/search" class="btn btn-primary mt-3">
+        <i class="bi bi-search"></i> Pesquisar Veículos
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
